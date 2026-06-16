@@ -8,10 +8,13 @@ Features
 
 
 -Editor
-Currently just a blank window executable uses GLAD open GL 
-<img width="1902" height="1012" alt="image" src="https://github.com/user-attachments/assets/3f2c2b4d-86c5-4c78-b816-d7e06912e65c" />
-
+PAST
+6/15 just a blank window executable uses GLAD open GL 
 Currently
+Editor supporting most custom shaders, uses OPENGL to render
+not much now but a flesh colored triangle in the editor
+<img width="1279" height="700" alt="Screenshot 2026-06-16 161001" src="https://github.com/user-attachments/assets/913674e0-a29e-4769-8a1c-4c8186ab980f" />
+
 
 
 
@@ -40,7 +43,7 @@ Roadmap
   --save funtion
   --LOGO
   
--Visual/Shader engine
+-Visual/Shader engine(COMPLETE)
 -2d Camera
 
 
