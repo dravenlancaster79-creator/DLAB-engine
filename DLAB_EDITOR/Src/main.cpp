@@ -74,6 +74,166 @@ int main()
 		return -1;
 	}
 
+	// Create temp Vertex Data
+	float vertices[] =
+	{
+		.00f, .0f ,.0f, // one vert
+		-.5f,-.5f, .0f,
+		.5f, -.5f, .0f
+
+	};
+    //create temp vert Src
+	const char* vertexSource =
+		"#version 450 core \n"
+		"layout (location = 0) in vec3 aPosition;\n"
+		"void main()\n"
+		"{\n"
+		"	gl_Position = vec4(aPosition, 1.0);\n"
+		"}\0";
+
+	// create Shaders
+	GLuint vertexShader;
+	vertexShader = glCreateShader(GL_VERTEX_SHADER);
+
+	//add Vert Shader Src
+	glShaderSource(vertexShader, 1, &vertexSource, NULL);
+
+	//Compile Vert Shader
+	glCompileShader(vertexShader);
+
+	//Gert the comilation status
+	int status;
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &status);
+
+	if (!status)
+	{
+		char infoLog[512];
+		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+		std::cout << "Failed to compile vertex shader!!\n" << infoLog << std::endl;
+		return -1;
+
+
+
+	}
+
+	// Create temp Fragment Shader
+	const char* fragmentSource =
+		"#version 450 core\n"
+		"out vec4 color;\n"
+		"void main()\n"
+		"{\n"
+		"	color = vec4(1.0f, .54f, .69f, 1.0f);\n"
+		"}\0";
+
+	//create fragshade
+	GLuint fragmentShader;
+	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+	//Add Frag shd src
+	glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
+
+	//Compile Frag Shader
+	glCompileShader(fragmentShader);
+
+	// get cumil status
+	 status; 
+	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &status);
+
+	if (!status)
+	{
+		char infoLog[512];
+		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+		std::cout << "Failed to copile fragment shader!!\n" << infoLog << std::endl;
+		return -1;
+
+
+
+	}
+
+	// Create Shd Program
+	GLuint shaderProgram;
+	shaderProgram = glCreateProgram();
+
+	//attach above shader
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, fragmentShader);
+
+	//link shd
+
+	glLinkProgram(shaderProgram);
+
+	//check link status
+	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &status);
+
+	if (!status)
+	{
+		char infoLog[512];
+		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+		std::cout << "Failed to Link Shader Program!!\n" << infoLog << std::endl;
+		return -1;
+
+
+
+	}
+
+
+	//enable Shader
+	glUseProgram(shaderProgram);
+
+	//created and linked=delete shaders
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
+
+	//creete vertex array obj and buffer obj
+	GLuint VAO, VBO;
+
+	// gen VAO
+
+	glGenVertexArrays(1, &VAO);
+
+	// GEN VBO
+
+	glGenBuffers(1, &VBO);
+
+	//BIND VAO VBO
+
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	
+	glBufferData(
+	GL_ARRAY_BUFFER, // buf type
+	sizeof(vertices) * 3 * sizeof(float), // size in byte of the buff
+	vertices,
+	GL_STATIC_DRAW				//the use of data stored
+
+	
+	);
+
+	glVertexAttribPointer(
+	0,  // att 0 --layout pos in shder
+	3, // num of components p/vertex
+	GL_FLOAT, //type 
+	GL_FALSE, // normalized-- specifies if Fixed data vals should be normalizedddddddd :)
+	3 * sizeof(float), // stride
+	(void*)0 // pointer  --offset of 1 component
+
+	
+	
+	);
+
+	glEnableVertexAttribArray(0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+
+
+
+
+
+
+
+
+
 	SDL_Event event{};
 
 	//window loop
@@ -97,14 +257,19 @@ int main()
 		}
 
 		glViewport(
-			window.GetXpos(),
-			window.GetYpos(),
+			0,
+			0,
 			window.GetWidth(),
 			window.GetHeight());
 		
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+		glUseProgram(shaderProgram);
+		glBindVertexArray(VAO);
 
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+
+		glBindVertexArray(0);
 		SDL_GL_SwapWindow(window.GetWindow().get());
 	}
 
