@@ -39,11 +39,13 @@ Roadmap
 -GUI
   --create new
   -- Load function
-  --contenue
+  --continue
   --save funtion
   --LOGO
+
   
 -Visual/Shader engine(COMPLETE)
+-Textures(SOIL)
 -2d Camera
 
 
